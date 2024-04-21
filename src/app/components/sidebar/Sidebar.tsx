@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Navbar } from '../navbar/Navbar';
 import { IoBrowsersOutline, IoCalculator, IoLogoReact } from "react-icons/io5";
+import { MdVideogameAsset } from "react-icons/md";
 
 //Menu Items
 const ItemsMenu = [
@@ -16,6 +17,12 @@ const ItemsMenu = [
         icon: <IoCalculator size={40} className="w-6 h-6 text-white" />,
         title: 'Counter',
         subTitle: 'Contador Client Side'
+    },
+    {
+        path: '/dashboard/pokemons',
+        icon: <MdVideogameAsset size={40} className="w-6 h-6 text-white" />,
+        title: 'Pokemons',
+        subTitle: 'Info Pokemons'
     }
 ];
 
