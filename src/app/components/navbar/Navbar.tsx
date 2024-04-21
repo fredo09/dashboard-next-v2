@@ -13,10 +13,7 @@ interface Props {
 }
 
 export const Navbar = ({ path, icon, title, subTitle }: Props) => {
-  console.log("🚀 ~ Navbar ~ path:", path);
-
   const currentPath = usePathname();
-  console.log("🚀 ~ Navbar ~ currentPath:", currentPath);
   
   return (
     <Link
