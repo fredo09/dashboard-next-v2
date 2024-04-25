@@ -21,6 +21,7 @@ export const PokemonCard = ({ pokemon }: Props) => {
                         alt={ `${name} image` }
                         height={100}
                         width={100}
+                        priority={false}
                     />
                     <p className="pt-2 text-lg font-semibold text-gray-50 capitalize">{ name }</p>
                     <p className="text-sm text-gray-100 capitalize">{ name }</p>
