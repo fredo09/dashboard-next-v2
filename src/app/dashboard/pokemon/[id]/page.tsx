@@ -1,8 +1,23 @@
 
 import { PokemonResponse } from "@/pokemons";
+import { Metadata } from "next";
 
 interface Props {
     params: { id: string }
+}
+
+/*
+*   -> este es la forma de como hacer que la metada en next sea  dinamica usando en este caso la peticion de la api de pokemon
+*   debe de exportar un funcion con el name "generateMetadata"
+*/
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    
+    const { id, name } = await getPokemonApi(params.id);
+    
+    return {
+        title: `#${id} - ${name}`,
+        description: `Pokemon ${name}`
+    }
 }
 
 const getPokemonApi = async(id: string): Promise<PokemonResponse> => {
@@ -19,9 +34,6 @@ export default async function PokemonPage({ params }: Props) {
     return (
         <div>
             Pokemon Page
-            {
-                JSON.stringify(pokemon)
-            }
         </div>
     );
 }
