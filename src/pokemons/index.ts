@@ -8,4 +8,4 @@ export type { PokemonsResponse } from './interfaces/pokemons-response';
 export type { SimplePokemon } from './interfaces/simple-pokemon';
 
 // * export components
-export { PokemonGrid } from './components';
+export * from './components';

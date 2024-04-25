@@ -1,5 +1,6 @@
 import React from 'react';
-import { PokemonGrid, PokemonsResponse, SimplePokemon } from '@/app/pokemons';
+import { PokemonGrid, PokemonsResponse, SimplePokemon } from '@/pokemons';
+
 
 const getApiPokemons = async ( limit = 20, offset = 0 ): Promise<SimplePokemon[]> => {
     const responsePokemons: PokemonsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`)
@@ -10,6 +11,9 @@ const getApiPokemons = async ( limit = 20, offset = 0 ): Promise<SimplePokemon[]
         name: responsePokemon.name
     }));
     
+    //throw new Error('Este error es algo que no debe de pasar... ☠️');
+    //throw notFound(); -> Funcion para mostrar cunado no se encuentra el recurso en next
+
     return pokemons;
 }
 
