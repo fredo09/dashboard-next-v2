@@ -2,6 +2,7 @@
 import { PokemonResponse } from "@/pokemons";
 import { Metadata } from "next";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 interface Props {
     params: { id: string }
@@ -12,21 +13,36 @@ interface Props {
 *   debe de exportar un funcion con el name "generateMetadata"
 */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+
+    // * Si ocurre algun error al generar Metadata retornaremos una estructura generica 
+    try {
+      const { id, name } = await getPokemonApi(params.id);
     
-    const { id, name } = await getPokemonApi(params.id);
-    
-    return {
-        title: `#${id} - ${name}`,
-        description: `Pokemon ${name}`
+      return {
+          title: `#${id} - ${name}`,
+          description: `Pokemon ${name}`
+      }
+    } catch (error) {
+      return {
+        title: 'Listado de Pokemons',
+        description: 'Culpa cupidatat ipsum magna reprehenderit ex tempor sint ad minim reprehenderit consequat sit.'
+      }
     }
 }
 
 const getPokemonApi = async(id: string): Promise<PokemonResponse> => {
-    const responsePokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-        cache: 'force-cache' // -> guarda la cache de la peticion para cuando se haga de nuevo la recupere rapido
+  try {
+    const responsePokemon  = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
+      cache: 'force-cache' // -> guarda la cache de la peticion para cuando se haga de nuevo la recupere rapido
     }).then(result => result.json());
 
-    return responsePokemon
+    return responsePokemon;
+  } catch (error) {
+    // * si ocurre algun error en el servicio lanzammos "notFound() <Template>" para redireccionar a que no se encontro dicha solicitud
+    console.log("🚀 ~ getPokemonApi ~ error:", error);
+    
+    notFound();
+  }
 }
 
 
