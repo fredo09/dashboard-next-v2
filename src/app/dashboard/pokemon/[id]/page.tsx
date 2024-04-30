@@ -5,8 +5,25 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 interface Props {
-    params: { id: string }
+  params: { id: string }
 }
+
+/*
+ *  esto se usa para generar contenido statico en "build time" ya previamente cargado y listo cuando se solicite
+ */
+export async function generateStaticParams() {
+  // * -> Generamos params [id] para generar contenido statico
+  const staticInitialPokemons = generateIdsPokemons();
+
+  return staticInitialPokemons.map(id => ({
+    id: id
+  }));
+}
+
+//* Generate array de 151 ids de pokemons
+const generateIdsPokemons = () => {
+  return Array.from({ length: 151 }).map((v, i) => `${i + 1}` );
+} 
 
 /*
 *   -> este es la forma de como hacer que la metada en next sea  dinamica usando en este caso la peticion de la api de pokemon
@@ -32,8 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const getPokemonApi = async(id: string): Promise<PokemonResponse> => {
   try {
-    const responsePokemon  = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-      cache: 'force-cache' // -> guarda la cache de la peticion para cuando se haga de nuevo la recupere rapido
+    const responsePokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
+      //! solo puede usarse uno
+      //cache: 'force-cache', // * -> guarda la cache de la peticion para cuando se haga de nuevo la recupere rapido 
+      next: { //* -> podemos indicar cuando queremos revalidar esta peticion 
+        revalidate: 60 * 60 *30
+      }
     }).then(result => result.json());
 
     return responsePokemon;
