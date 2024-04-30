@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from "next";
-import { Counter } from "@/app/shopping-cart/components";
+import { Counter } from '@/shopping-cart/components';
+
 
 export const metadata: Metadata = {
   title: "Shopping Cart",
