@@ -1,39 +1,42 @@
-
-import { PokemonResponse } from "@/pokemons";
 import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { PokemonResponse, PokemonsResponse } from "@/pokemons";
 
 interface Props {
-  params: { id: string }
+    params: { name: string }
 }
 
-/*
- *  esto se usa para generar contenido statico en "build time" ya previamente cargado y listo cuando se solicite
- */
-export async function generateStaticParams() {
-  // * -> Generamos params [id] para generar contenido statico
-  const staticInitialPokemons = generateIdsPokemons();
+type PokemonByName = {
+  name: string
+}
 
-  return staticInitialPokemons.map(id => ({
-    id: id
+//* -> Generate static by name
+export async function generateStaticParams() {
+  const responsePokemons: PokemonsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=151`)
+    .then(data => data.json());
+    
+  const staticInitialPokemons = responsePokemons.results.map(responsePokemon => ({
+    name: responsePokemon.name
+  }));
+  console.log("🚀 ~ pokemons ~ pokemons:", staticInitialPokemons);
+
+  
+  console.log("🚀 ~ generateStaticParams ~ parsePokemonByName(staticInitialPokemons):", parsePokemonByName(staticInitialPokemons))
+
+  return parsePokemonByName(staticInitialPokemons);
+}
+
+const parsePokemonByName = (staticPokemons: PokemonByName[]): Array<PokemonByName> => {
+  return staticPokemons.map(({ name }) => ({
+    name: name
   }));
 }
 
-//* Generate array de 151 ids de pokemons
-const generateIdsPokemons = () => {
-  return Array.from({ length: 151 }).map((v, i) => `${i + 1}` );
-} 
-
-/*
-*   -> este es la forma de como hacer que la metada en next sea  dinamica usando en este caso la peticion de la api de pokemon
-*   debe de exportar un funcion con el name "generateMetadata"
-*/
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-
     // * Si ocurre algun error al generar Metadata retornaremos una estructura generica 
     try {
-      const { id, name } = await getPokemonApi(params.id);
+      const { id, name } = await getPokemonApi(params.name);
     
       return {
           title: `#${id} - ${name}`,
@@ -47,31 +50,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-const getPokemonApi = async(id: string): Promise<PokemonResponse> => {
-  try {
-    const responsePokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-      //! solo puede usarse uno
-      //cache: 'force-cache', // * -> guarda la cache de la peticion para cuando se haga de nuevo la recupere rapido 
-      next: { //* -> podemos indicar cuando queremos revalidar esta peticion 
-        revalidate: 60 * 60 *30
-      }
-    }).then(result => result.json());
-
-    return responsePokemon;
-  } catch (error) {
-    // * si ocurre algun error en el servicio lanzammos "notFound() <Template>" para redireccionar a que no se encontro dicha solicitud
-    console.log("🚀 ~ getPokemonApi ~ error:", error);
-    
-    notFound();
-  }
+const getPokemonApi = async(name: string): Promise<PokemonResponse> => {
+    try {
+      const responsePokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`, {
+        next: {
+          revalidate: 60 * 60 *30
+        }
+      }).then(result => result.json());
+  
+      return responsePokemon;
+    } catch (error) {      
+      notFound();
+    }
 }
 
-
 export default async function PokemonPage({ params }: Props) {
+    const pokemon = await getPokemonApi(params.name);
 
-    const pokemon = await getPokemonApi(params.id);
-    
-  
     return (
       <div className="flex mt-5 flex-col items-center text-slate-800">
         <div className="relative flex flex-col items-center rounded-[20px] w-[700px] mx-auto bg-white bg-clip-border  shadow-lg  p-3">
@@ -165,4 +160,4 @@ export default async function PokemonPage({ params }: Props) {
         </div>
       </div>
     );
-  }
+}
