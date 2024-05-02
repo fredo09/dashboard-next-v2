@@ -1,5 +1,12 @@
-import { SimpleWidget } from '@/components';
 import React from 'react';
+import type { Metadata } from 'next';
+import { WidgetGrid } from '@/components';
+
+export const metadata: Metadata = {
+  title: "Main Page",
+  description: "Main Page.",
+};
+
 
 export default function mainPage () {
   return (
@@ -7,9 +14,7 @@ export default function mainPage () {
       <h1 className='mt-2 text-3xl'>Dashboard</h1>
       <span className='text-xl'> Informacion general</span>
 
-      <div className='flex flex-wrap p-2 items-center justify-between'>
-        <SimpleWidget />
-      </div>
+      <WidgetGrid />
     </div>
   )
 }
