@@ -4,12 +4,35 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/store';
 import { addCounter, initialCounterState, restCounter } from '@/store/counter/CounterSlice';
+import { notFound } from 'next/navigation';
 
 interface Props {
   value?: number
 }
 
-export const Counter = ({ value = 0 }: Props) => {
+export interface CounterResponse {
+  data: Data;
+}
+
+export interface Data {
+  status:  string;
+  message: string;
+  count:   number;
+}
+
+//* -> LLAMADA A LA API 
+const getCounterApi = async(): Promise<CounterResponse> => {
+  try {
+    const data= await fetch('/api/counter').then(result => result.json());
+    console.log("🚀 ~ getCounterApi ~ data:", data.data.count )
+
+    return data;
+  } catch(err) {
+    notFound();
+  }
+}
+
+export const Counter =  ({ value = 0 }: Props) => {
 
   //add counter reducer of store and dispatch
   const counter = useAppSelector( state => state.counter.count );
@@ -19,9 +42,14 @@ export const Counter = ({ value = 0 }: Props) => {
   //const [counter, setCounter] = useState(value);
 
   //* -> Seteamos el value al componente 
+  // useEffect(() => {
+  //   dispatch(initialCounterState(value));
+  // }, [dispatch, value])
+
+  //* -> usamos un effect para setear el value del api res full 
   useEffect(() => {
-    dispatch(initialCounterState(value));
-  }, [dispatch, value])
+    getCounterApi().then(({ data }) => dispatch(initialCounterState(data.count)));
+  },[dispatch]);
   
   return (
     <>
