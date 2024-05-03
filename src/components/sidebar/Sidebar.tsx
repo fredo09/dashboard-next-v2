@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Navbar } from '../navbar/Navbar';
-import { IoBrowsersOutline, IoCalculator, IoLogoReact } from "react-icons/io5";
+import { IoBrowsersOutline, IoCalculator, IoHeartCircleOutline, IoLogoReact } from "react-icons/io5";
 import { MdVideogameAsset } from "react-icons/md";
 
 //Menu Items
@@ -23,6 +23,12 @@ const ItemsMenu = [
         icon: <MdVideogameAsset size={40} className="w-6 h-6 text-white" />,
         title: 'Pokemons',
         subTitle: 'Info Pokemons'
+    },
+    {
+        path: '/dashboard/favorites',
+        icon: <IoHeartCircleOutline size={40} className="w-6 h-6 text-white" />,
+        title: 'favoritos',
+        subTitle: 'favoritos Pokemons'
     }
 ];
 
