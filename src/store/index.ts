@@ -2,13 +2,19 @@
  *  file store redux 
  */
 import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
+
+// Reducers
 import counterReducer from './counter/CounterSlice';
+import pokemonsReducer from './pokemons/pokemonsSlice';
+
+//Hooks redux
+import { useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
   reducer: {
     // add store... 🚀 
     counter: counterReducer,
+    favoritesPokemons: pokemonsReducer,
   },
 })
 
