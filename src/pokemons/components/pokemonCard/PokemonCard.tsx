@@ -21,7 +21,6 @@ export const PokemonCard = ({ pokemon }: Props) => {
     //use store of redux
     const isFavoritePokemon = useAppSelector(state => !!state.favoritesPokemons[id]);
     const dishPatch = useDispatch();
-    console.log("🚀 ~ PokemonCard ~ isFavoritePokemon:", isFavoritePokemon);
 
     //* -> se lanza cuando se hace click y modifica el state favorites pokemons
     const onToggle = () => {
