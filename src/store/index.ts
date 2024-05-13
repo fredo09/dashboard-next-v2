@@ -2,15 +2,25 @@
  *  file store redux 
  */
 import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
+
+// Reducers
 import counterReducer from './counter/CounterSlice';
+import pokemonsReducer from './pokemons/pokemonsSlice';
+
+//Hooks redux
+import { useDispatch, useSelector } from 'react-redux';
+
+//Middleware
+//import { localStorageMiddleware } from './middlewares/localStorage-middleware';
 
 export const store = configureStore({
   reducer: {
     // add store... 🚀 
     counter: counterReducer,
+    favoritesPokemons: pokemonsReducer,
   },
-})
+  // middleware: ( getDefaultMiddleware ) => getDefaultMiddleware().concat(localStorageMiddleware) 
+});
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

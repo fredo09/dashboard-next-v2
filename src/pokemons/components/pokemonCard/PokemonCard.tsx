@@ -1,15 +1,31 @@
+'use client';
+
 import React from "react";
 import Link from 'next/link';
 import Image from 'next/image';
 import { SimplePokemon } from "../../interfaces/simple-pokemon";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
+import { useAppSelector } from "@/store";
+import { useDispatch } from "react-redux";
+import { toggleFavoritePokemon } from "@/store/pokemons/pokemonsSlice";
 
 interface Props {
     pokemon: SimplePokemon
 }
 
+//! Nota: al usar !!state.favoritesPokemons[id] "!!" -> comvertimos un valor false a true, y si es ! se convierte a false cuando es null o undefined
+
 export const PokemonCard = ({ pokemon }: Props) => {
     const { id, name } = pokemon;
+
+    //use store of redux
+    const isFavoritePokemon = useAppSelector(state => !!state.favoritesPokemons.favorites[id]);
+    const dishPatch = useDispatch();
+
+    //* -> se lanza cuando se hace click y modifica el state favorites pokemons
+    const onToggle = () => {
+        dishPatch(toggleFavoritePokemon(pokemon));
+    }
 
     return (
         <div className="mx-auto right-0 mt-2 w-60">
@@ -34,17 +50,25 @@ export const PokemonCard = ({ pokemon }: Props) => {
                     </div>
                 </div>
                 <div className="border-b">
-                    <Link href="#" className="px-4 py-2 hover:bg-gray-100 flex items-center">
+                    <div className="px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer" onClick={ onToggle }>
                         <div className="text-red-600">
-                            <IoHeartOutline />
+                            {
+                                isFavoritePokemon 
+                                    ? ( <IoHeart/> )
+                                    : ( <IoHeartOutline /> ) 
+                            }
                         </div>
                         <div className="pl-3">
                             <p className="text-sm font-medium text-gray-800 leading-none">
-                                No es Favorito
+                               {
+                                    isFavoritePokemon
+                                        ? 'Es favorito'
+                                        : 'No es favorito'
+                               }
                             </p>
-                            <p className="text-xs text-gray-500">View your campaigns</p>
+                            <p className="text-xs text-gray-500">Click para una accion </p>
                         </div>
-                    </Link>
+                    </div>
                 </div>
             </div>
         </div>
