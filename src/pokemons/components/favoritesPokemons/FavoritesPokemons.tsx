@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppSelector } from '@/store';
 import { IoHeart } from 'react-icons/io5';
 import { PokemonGrid } from '../pokemonGrid/PokemonGrid';
@@ -9,15 +9,21 @@ import { PokemonGrid } from '../pokemonGrid/PokemonGrid';
 export const FavoritesPokemons = () => {
 
   //* -> Conectamos al store favorites pokemons
-  const pokemonsFavorites = useAppSelector(state => Object.values(state.favoritesPokemons));
+  const pokemonsFavorites = useAppSelector(state => Object.values(state.favoritesPokemons.favorites));
   const [pokemons, setPokemons] = useState(pokemonsFavorites);
+
+  //* checa el cambio de store en la validacion de pokemones favoritos
+  // useEffect(() => {
+  //   setPokemons(pokemonsFavorites);
+  // }, [pokemonsFavorites])
+  
 
   return (
     <>
       {
-        pokemons.length === 0
+        pokemonsFavorites.length === 0
           ? (<NotFavorites/>)
-          : (<PokemonGrid pokemons={pokemons} />)
+          : (<PokemonGrid pokemons={pokemonsFavorites} />)
       }
       {/* <PokemonGrid pokemons={pokemonsFavorites} /> */}
     </>

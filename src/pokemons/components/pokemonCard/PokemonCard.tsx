@@ -19,7 +19,7 @@ export const PokemonCard = ({ pokemon }: Props) => {
     const { id, name } = pokemon;
 
     //use store of redux
-    const isFavoritePokemon = useAppSelector(state => !!state.favoritesPokemons[id]);
+    const isFavoritePokemon = useAppSelector(state => !!state.favoritesPokemons.favorites[id]);
     const dishPatch = useDispatch();
 
     //* -> se lanza cuando se hace click y modifica el state favorites pokemons
